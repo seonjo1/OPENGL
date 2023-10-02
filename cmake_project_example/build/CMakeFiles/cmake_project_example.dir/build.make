@@ -73,15 +73,15 @@ CMakeFiles/cmake_project_example.dir/src/main.cpp.o: CMakeFiles/cmake_project_ex
 CMakeFiles/cmake_project_example.dir/src/main.cpp.o: /Users/seonjo/opengl/cmake_project_example/src/main.cpp
 CMakeFiles/cmake_project_example.dir/src/main.cpp.o: CMakeFiles/cmake_project_example.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/seonjo/opengl/cmake_project_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cmake_project_example.dir/src/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cmake_project_example.dir/src/main.cpp.o -MF CMakeFiles/cmake_project_example.dir/src/main.cpp.o.d -o CMakeFiles/cmake_project_example.dir/src/main.cpp.o -c /Users/seonjo/opengl/cmake_project_example/src/main.cpp
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cmake_project_example.dir/src/main.cpp.o -MF CMakeFiles/cmake_project_example.dir/src/main.cpp.o.d -o CMakeFiles/cmake_project_example.dir/src/main.cpp.o -c /Users/seonjo/opengl/cmake_project_example/src/main.cpp
 
 CMakeFiles/cmake_project_example.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cmake_project_example.dir/src/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/seonjo/opengl/cmake_project_example/src/main.cpp > CMakeFiles/cmake_project_example.dir/src/main.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/seonjo/opengl/cmake_project_example/src/main.cpp > CMakeFiles/cmake_project_example.dir/src/main.cpp.i
 
 CMakeFiles/cmake_project_example.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cmake_project_example.dir/src/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/seonjo/opengl/cmake_project_example/src/main.cpp -o CMakeFiles/cmake_project_example.dir/src/main.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/seonjo/opengl/cmake_project_example/src/main.cpp -o CMakeFiles/cmake_project_example.dir/src/main.cpp.s
 
 # Object files for target cmake_project_example
 cmake_project_example_OBJECTS = \
