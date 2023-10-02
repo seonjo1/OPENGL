@@ -1,3 +1,0 @@
-/Users/seonjo/opengl/cmake_project_example/build/CMakeFiles/cmake_project_example.dir
-/Users/seonjo/opengl/cmake_project_example/build/CMakeFiles/edit_cache.dir
-/Users/seonjo/opengl/cmake_project_example/build/CMakeFiles/rebuild_cache.dir
