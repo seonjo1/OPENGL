@@ -1,6 +1,7 @@
 #include "common.h"
 #include <fstream>
 #include <sstream>
+
 // 파일 로딩 함수
 std::optional<std::string> LoadTextFile(const std::string& filename) {
 // c++ 스타일의 파일 읽기
