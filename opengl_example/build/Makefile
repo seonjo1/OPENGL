@@ -192,6 +192,30 @@ src/common.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/common.cpp.s
 .PHONY : src/common.cpp.s
 
+src/context.obj: src/context.cpp.obj
+.PHONY : src/context.obj
+
+# target to build an object file
+src/context.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/context.cpp.obj
+.PHONY : src/context.cpp.obj
+
+src/context.i: src/context.cpp.i
+.PHONY : src/context.i
+
+# target to preprocess a source file
+src/context.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/context.cpp.i
+.PHONY : src/context.cpp.i
+
+src/context.s: src/context.cpp.s
+.PHONY : src/context.s
+
+# target to generate assembly for a file
+src/context.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/context.cpp.s
+.PHONY : src/context.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -215,6 +239,30 @@ src/main.s: src/main.cpp.s
 src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
+
+src/program.obj: src/program.cpp.obj
+.PHONY : src/program.obj
+
+# target to build an object file
+src/program.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/program.cpp.obj
+.PHONY : src/program.cpp.obj
+
+src/program.i: src/program.cpp.i
+.PHONY : src/program.i
+
+# target to preprocess a source file
+src/program.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/program.cpp.i
+.PHONY : src/program.cpp.i
+
+src/program.s: src/program.cpp.s
+.PHONY : src/program.s
+
+# target to generate assembly for a file
+src/program.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/opengl_example.dir/build.make CMakeFiles/opengl_example.dir/src/program.cpp.s
+.PHONY : src/program.cpp.s
 
 src/shader.obj: src/shader.cpp.obj
 .PHONY : src/shader.obj
@@ -255,9 +303,15 @@ help:
 	@echo "... src/common.obj"
 	@echo "... src/common.i"
 	@echo "... src/common.s"
+	@echo "... src/context.obj"
+	@echo "... src/context.i"
+	@echo "... src/context.s"
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/program.obj"
+	@echo "... src/program.i"
+	@echo "... src/program.s"
 	@echo "... src/shader.obj"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"

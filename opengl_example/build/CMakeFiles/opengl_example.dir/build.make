@@ -114,11 +114,43 @@ CMakeFiles/opengl_example.dir/src/shader.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/opengl_example.dir/src/shader.cpp.s"
 	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:/Users/seonjo/Desktop/opengl/opengl_example/src/shader.cpp -o CMakeFiles/opengl_example.dir/src/shader.cpp.s
 
+CMakeFiles/opengl_example.dir/src/program.cpp.obj: CMakeFiles/opengl_example.dir/flags.make
+CMakeFiles/opengl_example.dir/src/program.cpp.obj: CMakeFiles/opengl_example.dir/includes_CXX.rsp
+CMakeFiles/opengl_example.dir/src/program.cpp.obj: C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.cpp
+CMakeFiles/opengl_example.dir/src/program.cpp.obj: CMakeFiles/opengl_example.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/opengl_example.dir/src/program.cpp.obj"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/opengl_example.dir/src/program.cpp.obj -MF CMakeFiles/opengl_example.dir/src/program.cpp.obj.d -o CMakeFiles/opengl_example.dir/src/program.cpp.obj -c C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.cpp
+
+CMakeFiles/opengl_example.dir/src/program.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/opengl_example.dir/src/program.cpp.i"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.cpp > CMakeFiles/opengl_example.dir/src/program.cpp.i
+
+CMakeFiles/opengl_example.dir/src/program.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/opengl_example.dir/src/program.cpp.s"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.cpp -o CMakeFiles/opengl_example.dir/src/program.cpp.s
+
+CMakeFiles/opengl_example.dir/src/context.cpp.obj: CMakeFiles/opengl_example.dir/flags.make
+CMakeFiles/opengl_example.dir/src/context.cpp.obj: CMakeFiles/opengl_example.dir/includes_CXX.rsp
+CMakeFiles/opengl_example.dir/src/context.cpp.obj: C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.cpp
+CMakeFiles/opengl_example.dir/src/context.cpp.obj: CMakeFiles/opengl_example.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/opengl_example.dir/src/context.cpp.obj"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/opengl_example.dir/src/context.cpp.obj -MF CMakeFiles/opengl_example.dir/src/context.cpp.obj.d -o CMakeFiles/opengl_example.dir/src/context.cpp.obj -c C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.cpp
+
+CMakeFiles/opengl_example.dir/src/context.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/opengl_example.dir/src/context.cpp.i"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.cpp > CMakeFiles/opengl_example.dir/src/context.cpp.i
+
+CMakeFiles/opengl_example.dir/src/context.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/opengl_example.dir/src/context.cpp.s"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.cpp -o CMakeFiles/opengl_example.dir/src/context.cpp.s
+
 # Object files for target opengl_example
 opengl_example_OBJECTS = \
 "CMakeFiles/opengl_example.dir/src/main.cpp.obj" \
 "CMakeFiles/opengl_example.dir/src/common.cpp.obj" \
-"CMakeFiles/opengl_example.dir/src/shader.cpp.obj"
+"CMakeFiles/opengl_example.dir/src/shader.cpp.obj" \
+"CMakeFiles/opengl_example.dir/src/program.cpp.obj" \
+"CMakeFiles/opengl_example.dir/src/context.cpp.obj"
 
 # External object files for target opengl_example
 opengl_example_EXTERNAL_OBJECTS =
@@ -126,10 +158,12 @@ opengl_example_EXTERNAL_OBJECTS =
 opengl_example.exe: CMakeFiles/opengl_example.dir/src/main.cpp.obj
 opengl_example.exe: CMakeFiles/opengl_example.dir/src/common.cpp.obj
 opengl_example.exe: CMakeFiles/opengl_example.dir/src/shader.cpp.obj
+opengl_example.exe: CMakeFiles/opengl_example.dir/src/program.cpp.obj
+opengl_example.exe: CMakeFiles/opengl_example.dir/src/context.cpp.obj
 opengl_example.exe: CMakeFiles/opengl_example.dir/build.make
 opengl_example.exe: CMakeFiles/opengl_example.dir/linkLibs.rsp
 opengl_example.exe: CMakeFiles/opengl_example.dir/objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable opengl_example.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable opengl_example.exe"
 	"C:/Program Files/CMake/bin/cmake.exe" -E rm -f CMakeFiles/opengl_example.dir/objects.a
 	C:/msys64/mingw64/bin/ar.exe qc CMakeFiles/opengl_example.dir/objects.a @CMakeFiles/opengl_example.dir/objects1.rsp
 	C:/msys64/mingw64/bin/g++.exe -g -Wl,--whole-archive CMakeFiles/opengl_example.dir/objects.a -Wl,--no-whole-archive -o opengl_example.exe -Wl,--out-implib,libopengl_example.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/opengl_example.dir/linkLibs.rsp

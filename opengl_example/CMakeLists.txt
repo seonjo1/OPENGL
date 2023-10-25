@@ -11,7 +11,9 @@ project(${PROJECT_NAME})
 set(SRC src/main.cpp
 		src/common.cpp src/common.h
 		src/shader.cpp src/shader.h
-)
+		src/program.cpp src/program.h
+		src/context.cpp src/context.h
+	)
 
 add_executable(${PROJECT_NAME} ${SRC})
 

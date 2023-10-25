@@ -9,7 +9,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/seonjo/Desktop/opengl/opengl_example/src/common.cpp" "CMakeFiles/opengl_example.dir/src/common.cpp.obj" "gcc" "CMakeFiles/opengl_example.dir/src/common.cpp.obj.d"
+  "C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.cpp" "CMakeFiles/opengl_example.dir/src/context.cpp.obj" "gcc" "CMakeFiles/opengl_example.dir/src/context.cpp.obj.d"
   "C:/Users/seonjo/Desktop/opengl/opengl_example/src/main.cpp" "CMakeFiles/opengl_example.dir/src/main.cpp.obj" "gcc" "CMakeFiles/opengl_example.dir/src/main.cpp.obj.d"
+  "C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.cpp" "CMakeFiles/opengl_example.dir/src/program.cpp.obj" "gcc" "CMakeFiles/opengl_example.dir/src/program.cpp.obj.d"
   "C:/Users/seonjo/Desktop/opengl/opengl_example/src/shader.cpp" "CMakeFiles/opengl_example.dir/src/shader.cpp.obj" "gcc" "CMakeFiles/opengl_example.dir/src/shader.cpp.obj.d"
   )
 

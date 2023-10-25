@@ -1,5 +1,6 @@
 CMakeFiles/opengl_example.dir/src/main.cpp.obj: \
  C:/Users/seonjo/Desktop/opengl/opengl_example/src/main.cpp \
+ C:/Users/seonjo/Desktop/opengl/opengl_example/src/context.h \
  C:/Users/seonjo/Desktop/opengl/opengl_example/src/common.h \
  C:/msys64/mingw64/include/c++/13.1.0/memory \
  C:/msys64/mingw64/include/c++/13.1.0/bits/memoryfwd.h \
@@ -430,4 +431,5 @@ CMakeFiles/opengl_example.dir/src/main.cpp.obj: \
  C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/include/KHR/khrplatform.h \
  C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/include/GLFW/glfw3.h \
  C:/msys64/mingw64/include/GL/gl.h \
- C:/Users/seonjo/Desktop/opengl/opengl_example/src/shader.h
+ C:/Users/seonjo/Desktop/opengl/opengl_example/src/shader.h \
+ C:/Users/seonjo/Desktop/opengl/opengl_example/src/program.h

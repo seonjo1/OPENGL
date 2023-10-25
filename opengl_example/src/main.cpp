@@ -1,5 +1,7 @@
-#include "common.h"
-#include "shader.h"
+#include "context.h"
+#include <spdlog/spdlog.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 void OnFramebufferSizeChange(GLFWwindow* window, int width, int height) {
 	SPDLOG_INFO("framebuffer size changed: ({} x {})", width, height);
@@ -19,11 +21,6 @@ void OnKeyEvent(GLFWwindow* window,
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-void Render() {
-	glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 int main(int argc, const char** argv) {
@@ -49,14 +46,13 @@ int main(int argc, const char** argv) {
 
 	 // glfw 윈도우 생성, 실패하면 에러 출력후 종료
 	SPDLOG_INFO("Create glfw window");
-	auto window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME,
-	  nullptr, nullptr);
+	auto window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
 	if (!window) {
 		SPDLOG_ERROR("failed to create glfw window");
 		glfwTerminate();
 		return -1;
 	}
-		
+
 	glfwMakeContextCurrent(window);
 
 	// glad를 활용한 OpenGL 함수 로딩
@@ -70,10 +66,13 @@ int main(int argc, const char** argv) {
 	auto glVersion = glGetString(GL_VERSION);
 	SPDLOG_INFO("OpenGL context version: {}", (void *)glVersion);
 
-	auto vertexShader = Shader::CreateFromFile("./shader/simple.vs", GL_VERTEX_SHADER);
-	auto fragmentShader = Shader::CreateFromFile("./shader/simple.fs", GL_FRAGMENT_SHADER);
-	SPDLOG_INFO("vertex shader id: {}", vertexShader->Get());
-	SPDLOG_INFO("fragment shader id: {}", fragmentShader->Get());
+	auto context = Context::Create();
+	if (!context)
+	{
+		SPDLOG_ERROR("failed to create context");
+		glfwTerminate();
+		return -1;
+	}
 
 	OnFramebufferSizeChange(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChange);
@@ -84,10 +83,11 @@ int main(int argc, const char** argv) {
 	// glfw 루프 실행, 윈도우 close 버튼을 누르면 정상 종료
 	SPDLOG_INFO("Start main loop");
 	while (!glfwWindowShouldClose(window)) {
-		Render();
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+		context->Render();
+		glfwSwapBuffers(window);
 	}
+	context.reset(); // 또는 context = nullptr로 메모리 해제 
 
 	glfwTerminate();
 	return 0;
