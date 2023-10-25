@@ -8,7 +8,10 @@ set(WINDOW_WIDTH 960)
 set(WINDOW_HEIGHT 540)
 
 project(${PROJECT_NAME})
-set(SRC src/main.cpp)
+set(SRC src/main.cpp
+		src/common.cpp src/common.h
+		src/shader.cpp src/shader.h
+)
 
 add_executable(${PROJECT_NAME} ${SRC})
 

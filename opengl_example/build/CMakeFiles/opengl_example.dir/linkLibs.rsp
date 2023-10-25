@@ -1,0 +1,1 @@
+  -LC:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib  -lspdlog -lglfw3 -lglad -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

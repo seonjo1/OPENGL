@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles/dep_glad"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles/dep_glad.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/CMakeFiles/dep_glad-complete.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-build.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-configure.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-download.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-install.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-patch.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-test.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/build/dep_glad-prefix/src/dep_glad-stamp/dep_glad-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"dep_glad"
+		],
+		"name" : "dep_glad"
+	}
+}
