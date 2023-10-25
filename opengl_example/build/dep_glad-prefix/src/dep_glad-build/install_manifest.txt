@@ -1,7 +1,0 @@
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib/libglad.a
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/include/glad/glad.h
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/include/KHR/khrplatform.h
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib/cmake/glad/gladConfig.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib/cmake/glad/gladConfigVersion.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib/cmake/glad/gladTargets.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/build/install/lib/cmake/glad/gladTargets-noconfig.cmake
