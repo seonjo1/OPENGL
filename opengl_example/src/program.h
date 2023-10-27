@@ -17,6 +17,8 @@ public:
 	// but Ptr을 UPtr로 바꾸는건 어렵
 		~Program();
 	uint32_t Get() const {return m_program;}
+	void Use() const;
+	
 private:
 	Program() {}
 	bool Link(const std::vector<ShaderPtr>& shaders);

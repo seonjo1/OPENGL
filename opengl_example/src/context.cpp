@@ -29,22 +29,16 @@ bool Context::Init()
 
 	// 순서 주의
 	// 1. VAO 생성 후 binding
-	glGenVertexArrays(1, &m_vertexArrayObject); // array 생성
-	glBindVertexArray(m_vertexArrayObject); // array binding
+	m_vertexLayout = VertexLayout::Create();
 
 	// 2. VBO 생성 후 binding 하고 데이터 복사
-	glGenBuffers(1, &m_vertexBuffer); // vertexBuffer 생성 (vertexBuffer : 각 vertex의 위치, 색상 등이 들어가는 버퍼)
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // GL_ARRAY_BUFFER와 vertexBuffer를 binding (GL_ARRAY_BUFFER : VBO (vertex buffer object))
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertices, GL_STATIC_DRAW); // buffer에 데이터를 복사 한다.
+	m_vertexBuffer = Buffer::CreateWithData(GL_ARRAY_BUFFER, GL_STATIC_DRAW, vertices, sizeof(float) * 12);
 
-	// 3. vertex attribute 설정 (VBO를 읽기 위한 정보 저장)
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	// 3. VAO 의 attribute 설정 (VBO를 읽기 위한 정보 저장)
+	m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
 	// 4. EBO 생성 후 binding 하고 데이터 복사 (어처피 정수가 들어오므로 attribute array 설정은 필요 없음)
-	glGenBuffers(1, &m_indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * 6, indices, GL_STATIC_DRAW);
+	m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices, sizeof(uint32_t) * 6);
 
 	// Vertex Shader와 Fragment Shader 생성
 	// program class에 shared pointer로 넣어줘야 하므로 shaderPtr로 형변환해서 받음
@@ -71,6 +65,6 @@ void Context::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(m_program->Get());
+	m_program->Use();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
