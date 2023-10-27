@@ -13,10 +13,10 @@ bool Context::Init()
 {
 	// 점의 위치 x, y, z
 	float vertices[] = {
-		0.5f, 0.5f, 0.0f,   // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f, // bottom left
-		-0.5f, 0.5f, 0.0f   // top left
+		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right, red
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right, green
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,// bottom left, blue
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f  // top left, yellow
 	};
 	
 	// 중복되는 점의 x, y, z입력을 피하기 위해
@@ -32,18 +32,19 @@ bool Context::Init()
 	m_vertexLayout = VertexLayout::Create();
 
 	// 2. VBO 생성 후 binding 하고 데이터 복사
-	m_vertexBuffer = Buffer::CreateWithData(GL_ARRAY_BUFFER, GL_STATIC_DRAW, vertices, sizeof(float) * 12);
+	m_vertexBuffer = Buffer::CreateWithData(GL_ARRAY_BUFFER, GL_STATIC_DRAW, vertices, sizeof(float) * 24);
 
 	// 3. VAO 의 attribute 설정 (VBO를 읽기 위한 정보 저장)
-	m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+	m_vertexLayout->SetAttrib(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, sizeof(float) * 3);
 
 	// 4. EBO 생성 후 binding 하고 데이터 복사 (어처피 정수가 들어오므로 attribute array 설정은 필요 없음)
 	m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices, sizeof(uint32_t) * 6);
 
 	// Vertex Shader와 Fragment Shader 생성
 	// program class에 shared pointer로 넣어줘야 하므로 shaderPtr로 형변환해서 받음
-	ShaderPtr vertShader = Shader::CreateFromFile("./shader/simple.vs", GL_VERTEX_SHADER);
-	ShaderPtr fragShader = Shader::CreateFromFile("./shader/simple.fs", GL_FRAGMENT_SHADER);
+	ShaderPtr vertShader = Shader::CreateFromFile("./shader/per_vertex_color.vs", GL_VERTEX_SHADER);
+	ShaderPtr fragShader = Shader::CreateFromFile("./shader/per_vertex_color.fs", GL_FRAGMENT_SHADER);
 
 	if (!vertShader || !fragShader)
 		return false;
@@ -55,6 +56,12 @@ bool Context::Init()
 	if (!m_program)
 		return false;
 	SPDLOG_INFO("program id: {}", m_program->Get());
+
+	// // uniform 함수값 설정
+	// auto loc = glGetUniformLocation(m_program->Get(), "Color");
+	// m_program->Use();
+	// glUniform4f(loc, 0.0f, 1.0f, 0.0f, 1.0f);
+	// //
 
 	glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
 
