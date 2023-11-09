@@ -6,6 +6,7 @@
 #include "program.h"
 #include "buffer.h"
 #include "vertex_layout.h"
+#include "texture.h"
 
 // main의 내용에서 그림을 그리는 렌더링 부분을 분리시키는 클래스
 CLASS_PTR(Context)
@@ -22,7 +23,8 @@ private:
 	VertexLayoutUPtr m_vertexLayout;
 	BufferUPtr m_vertexBuffer;
 	BufferUPtr m_indexBuffer;
-	uint32_t m_texture; // texture id
+	TextureUPtr m_texture;
+	TextureUPtr m_texture2;
 };
 
 #endif
