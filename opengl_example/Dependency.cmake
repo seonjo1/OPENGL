@@ -8,7 +8,7 @@ set(DEP_LIB_DIR ${DEP_INSTALL_DIR}/lib)
 
 # spdlog: fast logger library
 ExternalProject_Add(
-    dep-spdlog
+    dep_spdlog
     GIT_REPOSITORY "https://github.com/gabime/spdlog.git"
     GIT_TAG "v1.x"
     GIT_SHALLOW 1
@@ -18,8 +18,9 @@ ExternalProject_Add(
     TEST_COMMAND ""
 )
 # Dependency 리스트 및 라이브러리 파일 리스트 추가
-set(DEP_LIST ${DEP_LIST} dep-spdlog)
-set(DEP_LIBS ${DEP_LIBS} spdlog)
+set(DEP_LIST ${DEP_LIST} dep_spdlog)
+set(DEP_LIBS ${DEP_LIBS} spdlog$<$<CONFIG:Debug>:d>) 
+# spdlog 만 적용(mingw의 경우)
 
 # glfw
 ExternalProject_Add(
@@ -47,7 +48,7 @@ ExternalProject_Add(
     PATCH_COMMAND ""
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${DEP_INSTALL_DIR}
-        -DGLAD_INSTALL=ON
+        # -DGLAD_INSTALL=ON
     TEST_COMMAND ""
     )
 set(DEP_LIST ${DEP_LIST} dep_glad)
@@ -86,3 +87,17 @@ ExternalProject_Add(
 		${DEP_INSTALL_DIR}/include/glm
 	)
 set(DEP_LIST ${DEP_LIST} dep_glm)
+
+add_library(imgui
+    imgui/imgui_draw.cpp
+    imgui/imgui_tables.cpp
+    imgui/imgui_widgets.cpp
+    imgui/imgui.cpp
+    imgui/imgui_impl_glfw.cpp
+    imgui/imgui_impl_opengl3.cpp
+    )
+target_include_directories(imgui PRIVATE ${DEP_INCLUDE_DIR})
+add_dependencies(imgui ${DEP_LIST})
+set(DEP_INCLUDE_DIR ${DEP_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
+set(DEP_LIST ${DEP_LIST} imgui)
+set(DEP_LIBS ${DEP_LIBS} imgui)

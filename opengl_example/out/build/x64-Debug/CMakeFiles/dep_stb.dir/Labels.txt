@@ -1,0 +1,14 @@
+# Target labels
+ dep_stb
+# Source files and their labels
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_stb
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_stb.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_stb-complete.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-build.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-configure.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-download.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-install.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-mkdir.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-patch.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-test.rule
+C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_stb-prefix/src/dep_stb-stamp/dep_stb-update.rule

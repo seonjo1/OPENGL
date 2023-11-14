@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_spdlog"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_spdlog.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_spdlog-complete.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-build.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-configure.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-download.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-install.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-patch.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-test.rule"
+		},
+		{
+			"file" : "C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/dep_spdlog-prefix/src/dep_spdlog-stamp/dep_spdlog-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"dep_spdlog"
+		],
+		"name" : "dep_spdlog"
+	}
+}
