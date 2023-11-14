@@ -1,8 +1,0 @@
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/include/GLFW/glfw3.h
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/include/GLFW/glfw3native.h
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/cmake/glfw3/glfw3Config.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/cmake/glfw3/glfw3ConfigVersion.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/cmake/glfw3/glfw3Targets.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/cmake/glfw3/glfw3Targets-debug.cmake
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/pkgconfig/glfw3.pc
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/install/lib/glfw3.lib

@@ -1,9 +1,0 @@
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/opengl_example.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_spdlog.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_glfw.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_glad.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_stb.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/dep_glm.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/imgui.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/seonjo/Desktop/opengl/opengl_example/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
