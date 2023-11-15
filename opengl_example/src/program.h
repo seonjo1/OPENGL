@@ -9,6 +9,8 @@ class Program
 {
 public:
 	static ProgramUPtr Create(const std::vector<ShaderPtr>& shaders);
+	static ProgramUPtr Create(const std::string& vertShaderFilename,
+		 const std::string& fragShaderFilename);
 	// unique pointer는 단독으로 소유권을 갖는데
 	// shared pointer는 소유권을 공동을고 가질 수 있다.
 	// (소유권을 갖고 있는 변수가 없을때 메모리 해제)
@@ -22,6 +24,7 @@ public:
 	void SetUniform(const std::string&name, int value) const;
 	void SetUniform(const std::string&name, float value) const;
 	void SetUniform(const std::string&name, const glm::vec3& value) const;
+	void SetUniform(const std::string&name, const glm::vec4& value) const;
 	void SetUniform(const std::string&name, const glm::mat4& value) const;
 	
 private:

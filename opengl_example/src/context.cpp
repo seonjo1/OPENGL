@@ -134,20 +134,13 @@ bool Context::Init()
 	// 4. EBO 생성 후 binding 하고 데이터 복사 (어처피 정수가 들어오므로 attribute array 설정은 필요 없음)
 	m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices, sizeof(uint32_t) * 36);
 
-	// Vertex Shader와 Fragment Shader 생성
-	// program class에 shared pointer로 넣어줘야 하므로 shaderPtr로 형변환해서 받음
-	ShaderPtr vertShader = Shader::CreateFromFile("./shader/lighting.vs", GL_VERTEX_SHADER);
-	ShaderPtr fragShader = Shader::CreateFromFile("./shader/lighting.fs", GL_FRAGMENT_SHADER);
-	if (!vertShader || !fragShader)
+	m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
+	if (!m_simpleProgram)
 		return false;
-	SPDLOG_INFO("vertex shader id: {}", vertShader->Get());
-	SPDLOG_INFO("fragment shader id: {}", fragShader->Get());
-
-	// program 생성
-	m_program = Program::Create({fragShader, vertShader}); // {a, b} 벡터를 인자로 넣어줌
+	
+	m_program = Program::Create("./shader/lighting.vs", "./shader/lighting.fs");
 	if (!m_program)
 		return false;
-	SPDLOG_INFO("program id: {}", m_program->Get());
 
 	glClearColor(0.1f, 0.2f, 0.3f, 0.0f);
 
@@ -166,7 +159,10 @@ bool Context::Init()
 		return false;
 	SPDLOG_INFO("image2: {}x{}, {} channels", image2->GetWidth(), image2->GetHeight(), image2->GetChannelCount());
 	m_texture2 = Texture::CreateFromImage(image2.get());
-	
+
+	m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
+	m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
+
 	// 텍스처 0번 슬롯 설정
 	// 내가 사용하고자 하는 텍스트 슬롯 번호 지정
 	glActiveTexture(GL_TEXTURE0);
@@ -209,12 +205,7 @@ void Context::Render() {
 			ImGui::ColorEdit3("l.specular", glm::value_ptr(m_light.specular));
 		}
 		if (ImGui::CollapsingHeader("material", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			ImGui::ColorEdit3("m.ambient", glm::value_ptr(m_material.ambient));
-			ImGui::ColorEdit3("m.diffuse", glm::value_ptr(m_material.diffuse));
-			ImGui::ColorEdit3("m.specular", glm::value_ptr(m_material.specular));	
 			ImGui::DragFloat("m.shininess", &m_material.shininess, 1.0f, 1.0f, 256.0f);
-		}
 		ImGui::Checkbox("animation", &m_animation);
 	}
 	ImGui::End();
@@ -248,12 +239,9 @@ void Context::Render() {
 	);
 
 	auto lightModelTransform = glm::translate(glm::mat4(1.0), m_light.position) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
-	m_program->Use();
-	m_program->SetUniform("light.position", m_light.position);
-	m_program->SetUniform("light.ambient", m_light.diffuse);
-	m_program->SetUniform("material.ambient", m_light.diffuse);
-	m_program->SetUniform("transform", projection * view * lightModelTransform);
-	m_program->SetUniform("modelTransform", lightModelTransform);
+	m_simpleProgram->Use();
+	m_simpleProgram->SetUniform("Color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
+	m_simpleProgram->SetUniform("transform", projection * view * lightModelTransform);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	m_program->Use();
@@ -262,10 +250,15 @@ void Context::Render() {
 	m_program->SetUniform("light.ambient", m_light.ambient);
 	m_program->SetUniform("light.diffuse", m_light.diffuse);
 	m_program->SetUniform("light.specular", m_light.specular);
-	m_program->SetUniform("material.ambient", m_material.ambient);
-	m_program->SetUniform("material.diffuse", m_material.diffuse);
-	m_program->SetUniform("material.specular", m_material.specular);
+	m_program->SetUniform("material.diffuse", 0); // diffuse texture 셋팅
+	m_program->SetUniform("material.specular", 1); // specular texture 셋팅
 	m_program->SetUniform("material.shininess", m_material.shininess);
+
+	// texture 바인딩
+	glActiveTexture(GL_TEXTURE0);
+	m_material.diffuse->Bind();
+	glActiveTexture(GL_TEXTURE1);
+	m_material.specular->Bind();
 
 	for (size_t i = 0; i < cubePositions.size(); i++){
 		auto& pos = cubePositions[i];
