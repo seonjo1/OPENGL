@@ -25,5 +25,6 @@ bool Buffer::Init( uint32_t bufferType, uint32_t usage, const void *data, size_t
 	glGenBuffers(1, &m_buffer);
 	Bind();
 	glBufferData(m_bufferType, dataSize, data, usage);
+	// 지정된 버퍼에 데이터를 복사
 	return true;
 }

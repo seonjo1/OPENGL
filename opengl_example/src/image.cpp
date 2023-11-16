@@ -35,7 +35,7 @@ Image::~Image()
 
 bool Image::LoadWithStb(const std::string& filepath)
 {
-	// 이미지 상하 반전 옵션
+	// 이미지 상하 반전 옵션 (이미지는 좌상단이 0,0 아마도? 위아래가 반대임)
 	stbi_set_flip_vertically_on_load(true);
 	m_data = stbi_load(filepath.c_str(), &m_width, &m_height, &m_channelCount, 0);
 	if (!m_data)
