@@ -32,4 +32,7 @@ std::optional<std::string> LoadTextFile(const std::string& filename);
 // string*로 할당하면서 에러시 nullptr을 반환할 수도 있지만 
 // 할당을 하는 자체가 free해야하는 수고가 들기 때문에
 // optional을 사용하는 것이 유리함
+
+glm::vec3 GetAttenuationCoeff(float distance);
+
 #endif

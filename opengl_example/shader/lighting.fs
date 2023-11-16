@@ -8,7 +8,8 @@ uniform vec3 viewPos;
 
 struct Light
 {
-	vec3 direction;
+	vec3 position;
+	vec3 attenuation;
 	vec3 ambient;  // 광원의 ambient strength
 	vec3 diffuse;  // 광원의 분산광
 	vec3 specular; // 광원의 반사광
@@ -28,7 +29,11 @@ void main()
 	vec3 texColor = texture2D(material.diffuse, texCoord).xyz;
 	vec3 ambient = texColor * light.ambient; // 벡터들의 곱은 각 x, y, z끼리의 곱으로 계산된다.
 
-	vec3 lightDir = normalize(-light.direction); // - 빛의 방향 벡터
+	float dist = length(light.position - position);
+	vec3 distPoly = vec3(1.0, dist, dist * dist); // 1.0, d, d^2
+	float attenuation = 1.0 / dot(distPoly, light.attenuation);
+	// attenuation =  1 / (1.0 * Kc + d * Kl + d^2 * Kq) << 감쇠 값
+	vec3 lightDir = normalize(light.position - position) / dist; // - 빛의 방향 벡터
 	vec3 pixelNorm = normalize(normal);
 	// normal을 다시 normalize 하는 이유
 	// - vertex shader에서 계산된 normal은 rasterization되는 과정에서 선형보간이 진행됨
@@ -43,7 +48,7 @@ void main()
 	// pow를 사용하면 specularShininess가 1보다 크면 반사광의 영역이(원이) 커지고, 1보다 작으면 반사광의 영역이(원이) 작아진다.
 	vec3 specular = spec * specColor * light.specular; // specular의 빛의 정도를 조절
 
-	vec3 result = ambient + diffuse + specular;
+	vec3 result = (ambient + diffuse + specular) * attenuation;
 
 	fragColor = vec4(result, 1.0);
 }
