@@ -10,7 +10,7 @@ struct Light
 {
 	vec3 position;
 	vec3 direction; // 방향
-	float cutoff; // 각도
+	vec2 cutoff; // 각도
 	vec3 attenuation;
 	vec3 ambient;  // 광원의 ambient strength
 	vec3 diffuse;  // 광원의 분산광
@@ -35,13 +35,16 @@ void main()
 	vec3 distPoly = vec3(1.0, dist, dist * dist); // 1.0, d, d^2
 	float attenuation = 1.0 / dot(distPoly, light.attenuation);
 	// attenuation =  1 / (1.0 * Kc + d * Kl + d^2 * Kq) << 감쇠 값
-	vec3 lightDir = normalize(light.position - position) / dist; // - 빛의 방향 벡터
+	vec3 lightDir = normalize(light.position - position); // - 빛의 방향 벡터
 
 	float theta = dot(lightDir, normalize(-light.direction));
 	 // 광원과 물체 사이의 벡터와 빛의 방향 벡터 사의의 각도의 코사인값
 	vec3 result = ambient;
-
-	if (theta > light.cutoff) // 우리가 지정한 cos 값인 light.cutoff 보다 theta가 클경우 각도의 범위를 넘어간 것이므로 빛 x
+	float intensity = clamp((theta - light.cutoff[1]) / (light.cutoff[0] - light.cutoff[1]), 0.0, 1.0);
+	// cutoff[0] = 경계값
+	// cutoff[1] = cutoff[0] + offset ( offset 까지는 빛이 약해지면서 존재 )
+	// 이 둘을 이용해서 cutoff[0] ~ cutoff[1]의 값은 선형보간
+	if (intensity > 0.0)
 	{
 		vec3 pixelNorm = normalize(normal); // 물체표면에 대한 법선벡터
 		float diff = max(dot(pixelNorm, lightDir), 0.0);
@@ -53,7 +56,7 @@ void main()
 		float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 		vec3 specular = spec * specColor * light.specular;
 
-		result += diffuse + specular;
+		result += (diffuse + specular) * intensity;
 	}
 
 	result *= attenuation;  // 감쇠
