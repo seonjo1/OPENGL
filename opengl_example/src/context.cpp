@@ -78,61 +78,11 @@ void Context::MouseButton(int button, int action, double x, double y)
 // context 초기화 함수
 bool Context::Init()
 {
-	float vertices[] = { // pos.xyz, normal.xyz, texcoord.uv
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
+	m_box = Mesh::CreateBox();
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
-	};
-
-	uint32_t indices[] = {
-	0,  2,  1,  2,  0,  3,
-	4,  5,  6,  6,  7,  4,
-	8,  9, 10, 10, 11,  8,
-	12, 14, 13, 14, 12, 15,
-	16, 17, 18, 18, 19, 16,
-	20, 22, 21, 22, 20, 23,
-	};
-
-	// 순서 주의
-	// 1. VAO 생성 후 binding
-	m_vertexLayout = VertexLayout::Create();
-
-	// 2. VBO 생성 후 binding 하고 데이터 복사
-	m_vertexBuffer = Buffer::CreateWithData(GL_ARRAY_BUFFER, GL_STATIC_DRAW, vertices, sizeof(float) * 8 * 4 * 6);
-
-	// 3. VAO 의 attribute 설정 (VBO를 읽기 위한 정보 저장)
-	m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
-	m_vertexLayout->SetAttrib(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, sizeof(float) * 3);
-	m_vertexLayout->SetAttrib(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, sizeof(float) * 6);
-
-	// 4. EBO 생성 후 binding 하고 데이터 복사 (어처피 정수가 들어오므로 attribute array 설정은 필요 없음)
-	m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, indices, sizeof(uint32_t) * 36);
+	m_model = Model::Load("./model/backpack.obj");
+	if (!m_model)
+		return false;
 
 	m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
 	if (!m_simpleProgram)
@@ -160,8 +110,13 @@ bool Context::Init()
 	SPDLOG_INFO("image2: {}x{}, {} channels", image2->GetWidth(), image2->GetHeight(), image2->GetChannelCount());
 	m_texture2 = Texture::CreateFromImage(image2.get());
 
-	m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
-	m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
+	// m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
+	// m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
+
+	m_material.diffuse = Texture::CreateFromImage(
+		Image::CreateSingleColorImage(4, 4, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)).get());
+	m_material.specular = Texture::CreateFromImage(
+		Image::CreateSingleColorImage(4, 4, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f)).get());
 
 	// 텍스처 0번 슬롯 설정
 	// 내가 사용하고자 하는 텍스트 슬롯 번호 지정
@@ -213,19 +168,6 @@ void Context::Render() {
 	}
 	ImGui::End();
 
-	std::vector<glm::vec3> cubePositions = {
-		glm::vec3( 0.0f, 0.0f, 0.0f),
-		glm::vec3( 2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3( 2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3( 1.3f, -2.0f, -2.5f),
-		glm::vec3( 1.5f, 2.0f, -2.5f),
-		glm::vec3( 1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f),
-	};
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	
@@ -233,6 +175,10 @@ void Context::Render() {
 		glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraYaw), glm::vec3(0.0f, 1.0f, 0.0f)) *
 		glm::rotate(glm::mat4(1.0f), glm::radians(m_cameraPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
 		glm::vec4(0.0f, 0.0f, -1.0f, 0.0f); // 마지막 값이 0이면 평행이동 불가
+
+	// 공포게임 손전등 구현
+	// m_light.position = m_cameraPos;
+	// m_light.direction = m_cameraFront;
 
 	auto projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 30.0f);
 	auto view = glm::lookAt(
@@ -245,34 +191,32 @@ void Context::Render() {
 	m_simpleProgram->Use();
 	m_simpleProgram->SetUniform("Color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
 	m_simpleProgram->SetUniform("transform", projection * view * lightModelTransform);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	m_box->Draw();
 
 	m_program->Use();
 	m_program->SetUniform("viewPos", m_cameraPos);
 	m_program->SetUniform("light.position", m_light.position);
 	m_program->SetUniform("light.direction", m_light.direction);
-	m_program->SetUniform("light.cutoff", glm::vec2(cosf(glm::radians(m_light.cutoff[0])), cosf(glm::radians(m_light.cutoff[0] + m_light.cutoff[1]))));
+	m_program->SetUniform("light.cutoff", glm::vec2(
+		cosf(glm::radians(m_light.cutoff[0])),
+		cosf(glm::radians(m_light.cutoff[0] + m_light.cutoff[1]))));
 	m_program->SetUniform("light.attenuation", GetAttenuationCoeff(m_light.distance));
 	m_program->SetUniform("light.ambient", m_light.ambient);
 	m_program->SetUniform("light.diffuse", m_light.diffuse);
 	m_program->SetUniform("light.specular", m_light.specular);
-	m_program->SetUniform("material.diffuse", 0); // diffuse texture 셋팅
-	m_program->SetUniform("material.specular", 1); // specular texture 셋팅
+
+	m_program->SetUniform("material.diffuse", 0);
+	m_program->SetUniform("material.specular", 1);
 	m_program->SetUniform("material.shininess", m_material.shininess);
 
-	// texture 바인딩
 	glActiveTexture(GL_TEXTURE0);
 	m_material.diffuse->Bind();
 	glActiveTexture(GL_TEXTURE1);
 	m_material.specular->Bind();
 
-	for (size_t i = 0; i < cubePositions.size(); i++){
-		auto& pos = cubePositions[i];
-		auto model = glm::translate(glm::mat4(1.0f), pos);
-		model = glm::rotate(model, glm::radians((m_animation ? (float)glfwGetTime() : 0.0f) * 120.0f + 20.0f * (float)i), glm::vec3(1.0f, 0.5f, 0.0f));
-		auto transform = projection * view * model;
-		m_program->SetUniform("transform", transform);
-		m_program->SetUniform("modelTransform", model);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	}
+	auto modelTransform = glm::mat4(1.0f);
+	auto transform = projection * view * modelTransform;
+	m_program->SetUniform("transform", transform);
+	m_program->SetUniform("modelTransform", modelTransform);
+	m_model->Draw();
 }

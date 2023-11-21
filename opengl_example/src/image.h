@@ -8,9 +8,11 @@ class Image
 {
 public:
 	static ImageUPtr Load(const std::string& filepath);
-	~Image();
-	static ImageUPtr Create(int width, int height, int channelCount = 4);
 	// 빈 메모리 공간을 할당 받는 함수
+	static ImageUPtr Create(int width, int height, int channelCount = 4);
+	static ImageUPtr CreateSingleColorImage(int width, int height, const glm::vec4& color);
+	~Image();
+
 	const uint8_t *GetData() const {return m_data;}
 	int GetWidth() const {return m_width;}
 	int GetHeight() const {return m_height;}
