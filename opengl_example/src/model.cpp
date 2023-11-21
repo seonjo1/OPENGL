@@ -20,6 +20,45 @@ bool Model::LoadByAssimp(const std::string& filename)
 		SPDLOG_ERROR("failed to load model: {}", filename);
 		return false;
 	}
+
+// material 처리 start
+	// .obj가 있는 directory의 위치 찾기
+	// ./model/backpack.obj에서 substr로 ./model을 추출 
+	auto dirname = filename.substr(0, filename.find_last_of("/"));
+	// lamda closer 형식의 함수 정의 (TexturePtr 반환)
+	// [&]는 함수 밖에서 정의된 변수에 접근을 가능하게 해준다
+	// (아래의 경우에서는 dirname에 접근이 가능)
+	auto LoadTexture = [&](aiMaterial * material, aiTextureType type) -> TexturePtr 
+	{
+		// 해당 type의 image file이 존재하는지 확인
+		if (material->GetTextureCount(type) <= 0)
+			return nullptr;
+		// 해당 type의 image 파일 이름을 filepath에 받아옴
+		aiString filepath;
+		material->GetTexture(type, 0, &filepath);
+		// filepath를 directory 경로와 합체해서 load
+		auto image = Image::Load(fmt::format("{}/{}", dirname, filepath.C_Str()));
+		if (!image)
+			return nullptr;
+		// texture 번호 반환
+		return Texture::CreateFromImage(image.get());
+	};
+
+	// scene 안에있는 material 개수만큼 반복
+	for (uint32_t i = 0; i < scene->mNumMaterials; i++)
+	{
+		// scene의 i번째 material 정보 get
+		auto material = scene->mMaterials[i];
+		// 새로운 material pointer 생성
+		auto glMaterial = Material::Create();
+		// scene의 material diffuse, specular texture를 생성 
+		glMaterial->diffuse = LoadTexture(material, aiTextureType_DIFFUSE);
+		glMaterial->specular = LoadTexture(material, aiTextureType_SPECULAR);
+		// 생성한 texture들을 m_materials에 저장
+		m_materials.push_back(std::move(glMaterial));
+	}
+// material 처리 end
+
 	// scene->mRootNode 부터 재귀적으로 처리
 	ProcessNode(scene->mRootNode, scene);
 	return true;
@@ -68,11 +107,15 @@ void Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 	}
 
 	auto glMesh = Mesh::Create(vertices, indices, GL_TRIANGLES);
+	// mesh의 mMaterialINdex가 0이상이면 이 mesh는 material을 갖고 있으므로
+	// 해당 material값을 setting 해준다. 
+	if (mesh->mMaterialIndex >= 0)
+		glMesh->SetMaterial(m_materials[mesh->mMaterialIndex]);
 	m_meshes.push_back(std::move(glMesh));
 }
 
-void Model::Draw() const
+void Model::Draw(const Program *program) const
 {
 	for (auto& mesh: m_meshes)
-		mesh->Draw();
+		mesh->Draw(program);
 }

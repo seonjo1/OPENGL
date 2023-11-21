@@ -191,7 +191,7 @@ void Context::Render() {
 	m_simpleProgram->Use();
 	m_simpleProgram->SetUniform("Color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
 	m_simpleProgram->SetUniform("transform", projection * view * lightModelTransform);
-	m_box->Draw();
+	m_box->Draw(m_simpleProgram.get());
 
 	m_program->Use();
 	m_program->SetUniform("viewPos", m_cameraPos);
@@ -218,5 +218,5 @@ void Context::Render() {
 	auto transform = projection * view * modelTransform;
 	m_program->SetUniform("transform", transform);
 	m_program->SetUniform("modelTransform", modelTransform);
-	m_model->Draw();
+	m_model->Draw(m_program.get());
 }
