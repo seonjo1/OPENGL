@@ -162,7 +162,7 @@ void Context::Render() {
 	}
 	ImGui::End();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	// Depth testing on
 	glEnable(GL_DEPTH_TEST);
 	
@@ -189,7 +189,7 @@ void Context::Render() {
 	{
 		auto lightModelTransform = glm::translate(glm::mat4(1.0), m_light.position) * glm::scale(glm::mat4(1.0), glm::vec3(0.1f));
 		m_simpleProgram->Use();
-		m_simpleProgram->SetUniform("Color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
+		m_simpleProgram->SetUniform("color", glm::vec4(m_light.ambient + m_light.diffuse, 1.0f));
 		m_simpleProgram->SetUniform("transform", projection * view * lightModelTransform);
 		m_box->Draw(m_simpleProgram.get());
 	}
@@ -227,8 +227,14 @@ void Context::Render() {
 	m_box1Material->SetToProgram(m_program.get());
 	m_box->Draw(m_program.get());
 
+	// box2에 윤곽선 그리기
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); 
+	glStencilFunc(GL_ALWAYS, 1, 0xFF); // stencil test 무조건 성공
+	glStencilMask(0xFF);
+
 	modelTransform =
-		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.749f, 2.0f)) *
+		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.75f, 2.0f)) *
 		glm::rotate(glm::mat4(1.0f), glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
 	transform = projection * view * modelTransform;
@@ -236,4 +242,17 @@ void Context::Render() {
 	m_program->SetUniform("modelTransform", modelTransform);
 	m_box2Material->SetToProgram(m_program.get());
 	m_box->Draw(m_program.get());
+
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDisable(GL_DEPTH_TEST);
+	m_simpleProgram->Use();
+	m_simpleProgram->SetUniform("color", glm::vec4(1.0f, 1.0f, 0.5f, 1.0f));
+	m_simpleProgram->SetUniform("transform", transform * glm::scale(glm::mat4(1.0f), glm::vec3(1.05f, 1.05f, 1.05f)));
+	m_box->Draw(m_simpleProgram.get());
+
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilMask(0xFF);
 }
