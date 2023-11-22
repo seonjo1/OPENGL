@@ -37,8 +37,8 @@ void main()
 	// attenuation =  1 / (1.0 * Kc + d * Kl + d^2 * Kq) << 감쇠 값
 	vec3 lightDir = normalize(light.position - position); // - 빛의 방향 벡터
 
-	float theta = dot(lightDir, normalize(-light.direction));
 	 // 광원과 물체 사이의 벡터와 빛의 방향 벡터 사의의 각도의 코사인값
+	float theta = dot(lightDir, normalize(-light.direction));
 	vec3 result = ambient;
 	float intensity = clamp((theta - light.cutoff[1]) / (light.cutoff[0] - light.cutoff[1]), 0.0, 1.0);
 	// cutoff[0] = 경계값
@@ -62,4 +62,8 @@ void main()
 	result *= attenuation;  // 감쇠
 
 	fragColor = vec4(result, 1.0);
+	
+	// depth visualization
+	// fragColor = vec4(vec3(gl_FragCoord.z), 1.0);
+	// {gl_FragCoord.z , gl_FragCoord.z, gl_FragCoord.z, 1}
 }

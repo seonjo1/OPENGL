@@ -106,11 +106,15 @@ void Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		indices[3 * i + 2] = mesh->mFaces[i].mIndices[2];
 	}
 
+	// mesh의 값을 gpu에 복사
 	auto glMesh = Mesh::Create(vertices, indices, GL_TRIANGLES);
+	
 	// mesh의 mMaterialINdex가 0이상이면 이 mesh는 material을 갖고 있으므로
 	// 해당 material값을 setting 해준다. 
 	if (mesh->mMaterialIndex >= 0)
 		glMesh->SetMaterial(m_materials[mesh->mMaterialIndex]);
+	
+	// mesh는 결국 vertex 정보와 material 정보를 다 갖고 있음
 	m_meshes.push_back(std::move(glMesh));
 }
 
