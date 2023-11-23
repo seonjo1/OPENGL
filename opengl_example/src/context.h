@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "mesh.h"
 #include "model.h"
+#include "framebuffer.h"
 
 // main의 내용에서 그림을 그리는 렌더링 부분을 분리시키는 클래스
 CLASS_PTR(Context)
@@ -28,6 +29,8 @@ private:
 	ProgramUPtr m_program;
 	ProgramUPtr m_simpleProgram;
 	ProgramUPtr m_textureProgram;
+	ProgramUPtr m_postProgram;
+	float m_gamma { 1.0f };
 
 	MeshUPtr m_box;
 	MeshUPtr m_plane;
@@ -70,6 +73,9 @@ private:
 	glm::vec3 m_cameraPos { glm::vec3(0.0f, 2.5f, 8.0f) };
 	// 카메라의 수직 방향
 	glm::vec3 m_cameraUp { glm::vec3(0.0f, 1.0f, 0.0f) };
+
+	//framebuffer
+	FramebufferUPtr m_framebuffer;
 
 	int m_width {WINDOW_WIDTH};
 	int m_height {WINDOW_HEIGHT};
