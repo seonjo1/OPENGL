@@ -2,10 +2,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-ImageUPtr Image::Load(const std::string& filepath)
+ImageUPtr Image::Load(const std::string& filepath, bool flipVertical)
 {
 	auto image = ImageUPtr(new Image());
-	if (!image->LoadWithStb(filepath))
+	if (!image->LoadWithStb(filepath, flipVertical))
 		return nullptr;
 	return std::move(image);
 }
@@ -33,10 +33,10 @@ Image::~Image()
 		stbi_image_free(m_data);
 }
 
-bool Image::LoadWithStb(const std::string& filepath)
+bool Image::LoadWithStb(const std::string& filepath, bool flipVertical)
 {
-	// 이미지 상하 반전 옵션 (이미지는 좌상단이 0,0 아마도? 위아래가 반대임)
-	stbi_set_flip_vertically_on_load(true);
+	// 이미지 상하 반전 옵션 (이미지는 좌상단이 0,0)
+	stbi_set_flip_vertically_on_load(flipVertical);
 	m_data = stbi_load(filepath.c_str(), &m_width, &m_height, &m_channelCount, 0);
 	if (!m_data)
 	{
