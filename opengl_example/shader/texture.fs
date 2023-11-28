@@ -12,6 +12,7 @@ void main()
 	//텍스처 파라미터를 사용하여 컬러 값을 샘플링한다.
 	vec4 pixel = texture(tex, texCoord);
 	if (pixel.a < 0.01)
-		discard; // 업데이트 x로 depth 기록 x
+		discard; // 업데이트 하지 않고, depth 기록 x
+				// 텍스쳐에서 창문 끝과 같이 그리고 싶지 않은 부분 처리
 	fragColor = pixel;
 }
