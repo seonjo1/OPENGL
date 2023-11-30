@@ -69,6 +69,7 @@ int main(int argc, const char** argv) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	// ... glfwCreateWindow() 호출 전
 
@@ -109,6 +110,7 @@ int main(int argc, const char** argv) {
 		glfwTerminate();
 		return -1;
 	}
+	
 	 // window에 context의 주소를 UserPointer로 저장
 	glfwSetWindowUserPointer(window, context.get());
 
