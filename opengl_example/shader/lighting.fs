@@ -43,7 +43,7 @@ void main()
 	vec3 result = ambient;
 	float intensity = clamp((theta - light.cutoff[1]) / (light.cutoff[0] - light.cutoff[1]), 0.0, 1.0);
 	// cutoff[0] = 경계값
-	// cutoff[1] = cutoff[0] + offset ( offset 까지는 빛이 약해지면서 존재 )
+	// cutoff[1] = offset ( offset 까지는 빛이 약해지면서 존재 )
 	// 이 둘을 이용해서 cutoff[0] ~ cutoff[1]의 값은 선형보간
 	if (intensity > 0.0)
 	{

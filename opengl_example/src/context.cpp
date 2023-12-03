@@ -168,6 +168,10 @@ bool Context::Init()
 	glVertexAttribDivisor(3, 1);
 	m_plane->GetIndexBuffer()->Bind();
 
+	m_shadowMap = ShadowMap::Create(1024, 1024);
+	m_lightingShadowProgram = Program::Create(
+		"./shader/lighting_shadow.vs", "./shader/lighting_shadow.fs");
+
 	return true;
 }
 
@@ -203,11 +207,34 @@ void Context::Render() {
 		}
 		ImGui::Checkbox("animation", &m_animation);
 
-		// ImGui에 frambuffer texture를 그리기
-		float aspectRatio = (float)m_width / (float)m_height;
-		ImGui::Image((ImTextureID)m_framebuffer->GetColorAttachment()->Get(), ImVec2(150 * aspectRatio, 150));
+		// Shadow map 1차 depth buffer rendering
+		// uv0와 uv1을 넣어서 뒤집어진 그림 방지 (상하 반전 ? 아마)
+		ImGui::Image((ImTextureID)m_shadowMap->GetShadowMap()->Get(),
+			ImVec2(256, 256), ImVec2(0, 1), ImVec2(1, 0));
 	}
 	ImGui::End();
+
+	// shadow map light 기준 depth buffer 그리기 (first pass)
+	auto lightView = glm::lookAt(m_light.position,
+		m_light.position + m_light.direction,
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	auto lightProjection = glm::perspective(
+		glm::radians((m_light.cutoff[0] + m_light.cutoff[1]) * 2.0f),
+		1.0f, 1.0f, 20.0f);
+
+	m_shadowMap->Bind();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0,
+		m_shadowMap->GetShadowMap()->GetWidth(),
+		m_shadowMap->GetShadowMap()->GetHeight());
+	m_simpleProgram->Use();
+	m_simpleProgram->SetUniform("color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	DrawScene(lightView, lightProjection, m_simpleProgram.get());
+	// depth buffer rendering 끝
+
+	// framebuffer 다시 default 설정
+	Framebuffer::BindToDefault();
+	glViewport(0, 0, m_width, m_height);
 
 	// frame buffer 바인딩 ( framebuffer의 m_colorAttachment와 m_depthStencilBuffer에 rendering )
 	// m_framebuffer->Bind();
@@ -254,115 +281,73 @@ void Context::Render() {
 		m_box->Draw(m_simpleProgram.get());
 	}
 
-	// spotlight setting
-	m_program->Use();
-	m_program->SetUniform("viewPos", m_cameraPos);
-	m_program->SetUniform("light.position", lightPos);
-	m_program->SetUniform("light.direction", lightDir);
-	m_program->SetUniform("light.cutoff", glm::vec2(
+	// light setting
+	m_lightingShadowProgram->Use();
+	m_lightingShadowProgram->SetUniform("viewPos", m_cameraPos);
+	m_lightingShadowProgram->SetUniform("light.position", m_light.position);
+	m_lightingShadowProgram->SetUniform("light.direction", m_light.direction);
+	m_lightingShadowProgram->SetUniform("light.cutoff", glm::vec2(
 		cosf(glm::radians(m_light.cutoff[0])),
 		cosf(glm::radians(m_light.cutoff[0] + m_light.cutoff[1]))));
-	m_program->SetUniform("light.attenuation", GetAttenuationCoeff(m_light.distance));
-	m_program->SetUniform("light.ambient", m_light.ambient);
-	m_program->SetUniform("light.diffuse", m_light.diffuse);
-	m_program->SetUniform("light.specular", m_light.specular);
-	// blinn 값 전달
-	m_program->SetUniform("blinn", (m_blinn ? 1 : 0));
+	m_lightingShadowProgram->SetUniform("light.attenuation", GetAttenuationCoeff(m_light.distance));
+	m_lightingShadowProgram->SetUniform("light.ambient", m_light.ambient);
+	m_lightingShadowProgram->SetUniform("light.diffuse", m_light.diffuse);
+	m_lightingShadowProgram->SetUniform("light.specular", m_light.specular);
+	m_lightingShadowProgram->SetUniform("blinn", (m_blinn ? 1 : 0));
+	m_lightingShadowProgram->SetUniform("lightTransform", lightProjection * lightView);
+	glActiveTexture(GL_TEXTURE3);
+	m_shadowMap->GetShadowMap()->Bind();
+	m_lightingShadowProgram->SetUniform("shadowMap", 3);
+	glActiveTexture(GL_TEXTURE0);
 
-	// material setting
-	auto modelTransform = 
+	DrawScene(view, projection, m_lightingShadowProgram.get());
+}
+
+void Context::DrawScene(const glm::mat4 &view,
+	const glm::mat4 &projection,
+	const Program *program)
+{
+	program->Use();
+	// 바닥
+	auto modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.5f, 0.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 1.0f, 10.0f));
 	auto transform = projection * view * modelTransform;
-	m_program->SetUniform("transform", transform);
-	m_program->SetUniform("modelTransform", modelTransform);
-	m_planeMaterial->SetToProgram(m_program.get());
-	m_box->Draw(m_program.get());
-
+	program->SetUniform("transform", transform);
+	program->SetUniform("modelTransform", modelTransform);
+	m_planeMaterial->SetToProgram(program);
+	m_box->Draw(program);
+	
+	// 박스 1
 	modelTransform =
-		glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.75f, -4.0f)) *
-		glm::rotate(glm::mat4(1.0f), glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
+	glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.75f, -4.0f)) *
+	glm::rotate(glm::mat4(1.0f), glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+	glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
 	transform = projection * view * modelTransform;
-	m_program->SetUniform("transform", transform);
-	m_program->SetUniform("modelTransform", modelTransform);
-	m_box1Material->SetToProgram(m_program.get());
-	m_box->Draw(m_program.get());
+	program->SetUniform("transform", transform);
+	program->SetUniform("modelTransform", modelTransform);
+	m_box1Material->SetToProgram(program);
+	m_box->Draw(program);
 
+	// 박스 2
 	modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.75f, 2.0f)) *
 		glm::rotate(glm::mat4(1.0f), glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
 	transform = projection * view * modelTransform;
-	m_program->SetUniform("transform", transform);
-	m_program->SetUniform("modelTransform", modelTransform);
-	m_box2Material->SetToProgram(m_program.get());
-	m_box->Draw(m_program.get());
+	program->SetUniform("transform", transform);
+	program->SetUniform("modelTransform", modelTransform);
+	m_box2Material->SetToProgram(program);
+	m_box->Draw(program);
 
-	// // environment box
-	// modelTransform =
-	// 	glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.75f, -2.0f)) *
-	// 	glm::rotate(glm::mat4(1.0f), glm::radians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
-	// 	glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
-	// m_envMapProgram->Use();
-	// m_envMapProgram->SetUniform("model", modelTransform);
-	// m_envMapProgram->SetUniform("view", view);
-	// m_envMapProgram->SetUniform("projection", projection);
-	// m_envMapProgram->SetUniform("cameraPos", m_cameraPos);
-	// m_cubeTexture->Bind();
-	// m_envMapProgram->SetUniform("skybox", 0);
-	// m_box->Draw(m_envMapProgram.get());
-	
-	// window blending 구현
-	// glEnable(GL_BLEND);
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// Face Culling
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_BACK);
-
-	// m_textureProgram->Use();
-	// m_windowTexture->Bind();
-	// m_textureProgram->SetUniform("tex", 0);
-
-	// modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 4.0f));
-	// transform = projection * view * modelTransform;
-	// m_textureProgram->SetUniform("transform", transform);
-	// m_plane->Draw(m_textureProgram.get());
-
-	// modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.5f, 5.0f));
-	// transform = projection * view * modelTransform;
-	// m_textureProgram->SetUniform("transform", transform);
-	// m_plane->Draw(m_textureProgram.get());
-
-	// modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.4f, 0.5f, 6.0f));
-	// transform = projection * view * modelTransform;
-	// m_textureProgram->SetUniform("transform", transform);
-	// m_plane->Draw(m_textureProgram.get());
-
-	// grass rendering
-	// glEnable(GL_BLEND);
-	// glDisable(GL_CULL_FACE);
-	// m_grassProgram->Use();
-	// m_grassProgram->SetUniform("tex", 0);
-	// m_grassTexture->Bind();
-	// m_grassInstance->Bind();
-	// modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, 0.0f));
-	// transform = projection * view * modelTransform;
-	// m_grassProgram->SetUniform("transform", transform);
-	// glDrawElementsInstanced(GL_TRIANGLES, m_plane->GetIndexBuffer()->GetCount(),
-	// 	GL_UNSIGNED_INT, 0, m_grassPosBuffer->GetCount());
-	
-	// post processing
-	// Framebuffer::BindToDefault();
-
-	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	// m_postProgram->Use();
-	// m_postProgram->SetUniform("transform", glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f)));
-	// // framebuffer 안에있는 texture bind
-	// m_framebuffer->GetColorAttachment()->Bind();
-	// m_postProgram->SetUniform("tex", 0);
-	// m_postProgram->SetUniform("gamma", m_gamma);
-	// m_plane->Draw(m_postProgram.get());
+	// 박스 3
+	modelTransform =
+		glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 1.75f, -2.0f)) *
+		glm::rotate(glm::mat4(1.0f), glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
+	transform = projection * view * modelTransform;
+	program->SetUniform("transform", transform);
+	program->SetUniform("modelTransform", modelTransform);
+	m_box2Material->SetToProgram(program);
+	m_box->Draw(program);
 }

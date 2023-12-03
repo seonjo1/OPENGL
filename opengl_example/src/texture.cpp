@@ -1,10 +1,10 @@
 #include "texture.h"
 
-TextureUPtr Texture::Create(int width, int height, uint32_t format)
+TextureUPtr Texture::Create(int width, int height, uint32_t format, uint32_t type)
 {
 	auto texture = TextureUPtr(new Texture());
 	texture->CreateTexture();
-	texture->SetTextureFormat(width, height, format);
+	texture->SetTextureFormat(width, height, format, type);
 	texture->SetFilter(GL_LINEAR, GL_LINEAR);
 	return std::move(texture);
 }
@@ -40,16 +40,18 @@ void Texture::SetWrap(uint32_t sWrap, uint32_t tWrap) const
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tWrap);
 }
 
-void Texture::SetTextureFormat(int width, int height, uint32_t format)
+void Texture::SetTextureFormat(int width, int height, uint32_t format, uint32_t type)
 {
 	m_width = width;
 	m_height = height;
 	m_format = format;
+	m_type = type;
 
+	// 마지막 인자에 nullptr을 넣으면 복사가 일어나지 않고 메모리 할당만 한다
 	glTexImage2D(GL_TEXTURE_2D, 0, m_format,
 		m_width, m_height, 0,
-		m_format, GL_UNSIGNED_BYTE, nullptr);
-	// 마지막 인자에 nullptr을 넣으면 복사가 일어나지 않고 메모리 할당만 한다
+		m_format, m_type,
+		nullptr);
 }
 
 void Texture::CreateTexture()
@@ -75,10 +77,11 @@ void Texture::SetTextureFromImage(const Image *image)
 	m_width = image->GetWidth();
 	m_height = image->GetHeight();
 	m_format = format;
+	m_type = GL_UNSIGNED_BYTE;
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
 		m_width, m_height, 0,
-		format, GL_UNSIGNED_BYTE, image->GetData());
+		format, m_type, image->GetData());
 
 	//MipMap생성
 	glGenerateMipmap(GL_TEXTURE_2D);
