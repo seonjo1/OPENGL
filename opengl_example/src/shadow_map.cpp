@@ -25,7 +25,8 @@ bool ShadowMap::Init(int width, int height) {
 	// depth buffer가 0 ~ 1 사이의 float 값을 가지므로 type에 GL_FLOAT을 넣어줌
 	m_shadowMap = Texture::Create(width, height, GL_DEPTH_COMPONENT, GL_FLOAT);
 	m_shadowMap->SetFilter(GL_NEAREST, GL_NEAREST);
-	m_shadowMap->SetWrap(GL_REPEAT, GL_REPEAT);
+	m_shadowMap->SetWrap(GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
+	m_shadowMap->SetBorderColor(glm::vec4(1.0f));
 
 	// depth_attachment만 붙이고 color는 신경 안씀
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,

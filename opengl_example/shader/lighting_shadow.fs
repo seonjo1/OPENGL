@@ -11,6 +11,7 @@ in VS_OUT {
 
 uniform vec3 viewPos;
 struct Light {
+	int directional;
 	vec3 position;
 	vec3 direction;
 	vec2 cutoff;
@@ -41,8 +42,17 @@ float ShadowCalculation(vec4 fragPosLight, vec3 normal, vec3 lightDir) {
 	float currentDepth = projCoords.z;
 	// light direction과 surface normal 간의 각도에 따라 bias를 바꾼다. ( 0.001 <= bias <= 0.02)
 	float bias = max(0.02 * (1.0 - dot(normal, lightDir)), 0.001);
-	// 현재 좌표의 depth가 더 크면 그림자 그리기 (depth 0이면 가깝고 1이면 멀다)
-	float shadow = currentDepth > closestDepth + bias ? 1.0 : 0.0;
+	// PCF 현재 픽셀 주변의 9개의 픽셀의 그림자 유무를 판단하여 그림자의 색을 조절
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+	for(int x = -1; x <= 1; ++x) {
+		for (int y = -1; y <= 1; ++y) {
+			float pcfDepth = texture(shadowMap,
+				projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0;
 	return shadow;
 }
 
@@ -50,16 +60,24 @@ void main() {
 	vec3 texColor = texture2D(material.diffuse, fs_in.texCoord).xyz;
 	vec3 ambient = texColor * light.ambient;
 
+	vec3 result = ambient;
+	vec3 lightDir;
+	float intensity = 1.0;
+	float attenuation = 1.0;
+	if (light.directional == 1) {
+	lightDir = normalize(-light.direction);
+	}
+	else {
 	float dist = length(light.position - fs_in.fragPos);
 	vec3 distPoly = vec3(1.0, dist, dist*dist);
-	float attenuation = 1.0 / dot(distPoly, light.attenuation);
-	vec3 lightDir = (light.position - fs_in.fragPos) / dist;
-
-	vec3 result = ambient;
+	attenuation = 1.0 / dot(distPoly, light.attenuation);
+	lightDir = (light.position - fs_in.fragPos) / dist;
+	
 	float theta = dot(lightDir, normalize(-light.direction));
-	float intensity = clamp(
+	intensity = clamp(
 		(theta - light.cutoff[1]) / (light.cutoff[0] - light.cutoff[1]),
 		0.0, 1.0);
+	}
 
 	if (intensity > 0.0) {
 	vec3 pixelNorm = normalize(fs_in.normal);

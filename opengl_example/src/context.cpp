@@ -168,9 +168,17 @@ bool Context::Init()
 	glVertexAttribDivisor(3, 1);
 	m_plane->GetIndexBuffer()->Bind();
 
+	// shadow map init
 	m_shadowMap = ShadowMap::Create(1024, 1024);
 	m_lightingShadowProgram = Program::Create(
 		"./shader/lighting_shadow.vs", "./shader/lighting_shadow.fs");
+
+	// normal map init
+	m_brickDiffuseTexture = Texture::CreateFromImage(
+		Image::Load("./image/brickwall.jpg", false).get());
+	m_brickNormalTexture = Texture::CreateFromImage(
+		Image::Load("./image/brickwall_normal.jpg", false).get());
+	m_normalProgram = Program::Create( "./shader/normal.vs", "./shader/normal.fs");
 
 	return true;
 }
@@ -195,6 +203,7 @@ void Context::Render() {
 		}
 		if (ImGui::CollapsingHeader("light", ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			ImGui::Checkbox("l.directional", &m_light.directional);
 			ImGui::DragFloat3("l.position", glm::value_ptr(m_light.position), 0.01f);
 			ImGui::DragFloat3("l.direction", glm::value_ptr(m_light.direction), 0.01f);
 			ImGui::DragFloat2("l.cutoff", glm::value_ptr(m_light.cutoff), 0.5f, 0.0f, 180.0f);
@@ -218,9 +227,9 @@ void Context::Render() {
 	auto lightView = glm::lookAt(m_light.position,
 		m_light.position + m_light.direction,
 		glm::vec3(0.0f, 1.0f, 0.0f));
-	auto lightProjection = glm::perspective(
-		glm::radians((m_light.cutoff[0] + m_light.cutoff[1]) * 2.0f),
-		1.0f, 1.0f, 20.0f);
+	auto lightProjection = m_light.directional ?
+		glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 30.0f) :
+		glm::perspective(glm::radians((m_light.cutoff[0] + m_light.cutoff[1]) * 2.0f), 1.0f, 1.0f, 20.0f);
 
 	m_shadowMap->Bind();
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -281,9 +290,10 @@ void Context::Render() {
 		m_box->Draw(m_simpleProgram.get());
 	}
 
-	// light setting
+	// shadow second pass (실제로 그리는 부분)
 	m_lightingShadowProgram->Use();
 	m_lightingShadowProgram->SetUniform("viewPos", m_cameraPos);
+	m_lightingShadowProgram->SetUniform("light.directional", m_light.directional ? 1 : 0);
 	m_lightingShadowProgram->SetUniform("light.position", m_light.position);
 	m_lightingShadowProgram->SetUniform("light.direction", m_light.direction);
 	m_lightingShadowProgram->SetUniform("light.cutoff", glm::vec2(
@@ -301,6 +311,25 @@ void Context::Render() {
 	glActiveTexture(GL_TEXTURE0);
 
 	DrawScene(view, projection, m_lightingShadowProgram.get());
+
+	// 그림자랑 상관없이 normal map을 이용한 벽돌 벽 그림
+	auto modelTransform =
+		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f));
+	m_normalProgram->Use();
+	m_normalProgram->SetUniform("viewPos", m_cameraPos);
+	m_normalProgram->SetUniform("lightPos", m_light.position);
+	// 0번 texture에는 diffuse map
+	glActiveTexture(GL_TEXTURE0);
+	m_brickDiffuseTexture->Bind();
+	m_normalProgram->SetUniform("diffuse", 0);
+	// 1번 texture에는 normal Map
+	glActiveTexture(GL_TEXTURE1);
+	m_brickNormalTexture->Bind();
+	m_normalProgram->SetUniform("normalMap", 1);
+	glActiveTexture(GL_TEXTURE0);
+	m_normalProgram->SetUniform("modelTransform", modelTransform);
+	m_normalProgram->SetUniform("transform", projection * view * modelTransform);
+	m_plane->Draw(m_normalProgram.get());	
 }
 
 void Context::DrawScene(const glm::mat4 &view,
@@ -311,7 +340,7 @@ void Context::DrawScene(const glm::mat4 &view,
 	// 바닥
 	auto modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.5f, 0.0f)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+		glm::scale(glm::mat4(1.0f), glm::vec3(40.0f, 1.0f, 40.0f));
 	auto transform = projection * view * modelTransform;
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
