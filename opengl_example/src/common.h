@@ -34,5 +34,6 @@ std::optional<std::string> LoadTextFile(const std::string& filename);
 // optional을 사용하는 것이 유리함
 
 glm::vec3 GetAttenuationCoeff(float distance);
+float RandomRange(float minValue = 0.0f, float maxValue = 1.0f);
 
 #endif

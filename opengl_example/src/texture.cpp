@@ -52,10 +52,20 @@ void Texture::SetTextureFormat(int width, int height, uint32_t format, uint32_t 
 	m_format = format;
 	m_type = type;
 
+	GLenum imageFormat = GL_RGBA;
+	if (m_format == GL_DEPTH_COMPONENT) {
+		imageFormat = GL_DEPTH_COMPONENT;        
+	}
+	else if (m_format == GL_RGB ||
+		m_format == GL_RGB16F ||
+		m_format == GL_RGB32F) {
+		imageFormat = GL_RGB;
+	}
+
 	// 마지막 인자에 nullptr을 넣으면 복사가 일어나지 않고 메모리 할당만 한다
 	glTexImage2D(GL_TEXTURE_2D, 0, m_format,
 		m_width, m_height, 0,
-		m_format, m_type,
+		imageFormat, m_type,
 		nullptr);
 }
 
