@@ -61,6 +61,17 @@ void Texture::SetTextureFormat(int width, int height, uint32_t format, uint32_t 
 		m_format == GL_RGB32F) {
 		imageFormat = GL_RGB;
 	}
+	else if (m_format == GL_RG ||
+		m_format == GL_RG16F ||
+		m_format == GL_RG32F) {
+		imageFormat = GL_RG;
+	}
+	else if (m_format == GL_RED ||
+		m_format == GL_R ||
+		m_format == GL_R16F ||
+		m_format == GL_R32F) {
+		imageFormat = GL_RED;
+	}
 
 	// 마지막 인자에 nullptr을 넣으면 복사가 일어나지 않고 메모리 할당만 한다
 	glTexImage2D(GL_TEXTURE_2D, 0, m_format,
