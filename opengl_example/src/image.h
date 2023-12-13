@@ -9,7 +9,7 @@ class Image
 public:
 	static ImageUPtr Load(const std::string& filepath, bool flipVertical = true); // flipVerticla의 default = true
 	// 빈 메모리 공간을 할당 받는 함수
-	static ImageUPtr Create(int width, int height, int channelCount = 4);
+	static ImageUPtr Create(int width, int height, int channelCount = 4, int bytePerChannel = 1);
 	static ImageUPtr CreateSingleColorImage(int width, int height, const glm::vec4& color);
 	~Image();
 
@@ -17,16 +17,18 @@ public:
 	int GetWidth() const {return m_width;}
 	int GetHeight() const {return m_height;}
 	int GetChannelCount() const {return m_channelCount;}
+	int GetBytePerChannel() const { return m_bytePerChannel; }
 
 	void SetCheckImage(int gridX, int gridY);
 	// gridx와 gridy를 이용해 check image를 생성
 private:
 	Image() {};
 	bool LoadWithStb(const std::string& filepath, bool flipVertical);
-	bool Allocate(int width, int height, int channelCount);
+	bool Allocate(int width, int height, int channelCount, int bytePerChannel);
 	int m_width {0};
 	int m_height {0};
 	int m_channelCount {0};
+	int m_bytePerChannel { 1 };
 	uint8_t *m_data {nullptr};
 };
 
