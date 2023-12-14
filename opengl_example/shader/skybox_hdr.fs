@@ -4,6 +4,7 @@ out vec4 fragColor;
 in vec3 localPos;
 
 uniform samplerCube cubeMap;
+uniform float roughness;
 
 void main() {
 	vec3 envColor = texture(cubeMap, localPos).rgb;
